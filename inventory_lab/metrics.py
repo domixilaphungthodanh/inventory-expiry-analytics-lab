@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 import pandas as pd
 
 from .db import TABLES
@@ -14,7 +16,7 @@ def pandas_tables(connection, as_of):
     stock = signed.groupby(moves.lot_id).sum().rename("on_hand")
     lots = raw["lots"].merge(stock, on="lot_id").merge(products, on="product_id")
     lots = lots[["lot_id","product_id","name","unit","received_on","expires_on","on_hand"]]
-    within = (pd.Timestamp(as_of) + pd.Timedelta(days=7)).date().isoformat()
+    within = (date.fromisoformat(as_of) + timedelta(days=7)).isoformat()
     lots["status"] = "valid"
     lots.loc[lots.expires_on.le(within),"status"] = "expiring"
     lots.loc[lots.expires_on.lt(as_of),"status"] = "expired"
@@ -41,7 +43,8 @@ def verify_allocation(connection, lots, product, quantity, as_of):
             break
         expected.append((row.lot_id, allocated))
         remaining -= allocated
-    assert list(zip(actual.lot_id, actual.allocated)) == expected and shortage == remaining
+    if list(zip(actual.lot_id, actual.allocated)) != expected or shortage != remaining:
+        raise ValueError("SQL và pandas không khớp ở mô phỏng FEFO")
     return actual, shortage
 
 
@@ -53,4 +56,5 @@ def checked_tables(connection, as_of):
                                       independent[name].reset_index(drop=True),
                                       check_dtype=False, check_exact=True, obj=name)
     return sql
+
 

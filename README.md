@@ -31,3 +31,5 @@ git show <mã-commit>
 `--as-of` chọn ngày quan sát trong quý I/2026, mặc định 31/03. `--db` chọn bản thực hành riêng, `--out` chọn thư mục kết quả. `python -m` chạy module Python. Git dùng để xem 12 bước phát triển. Thay `<mã-commit>` bằng mã ở đầu dòng trong `git log`.
 
 Dữ liệu giả lập, giờ Việt Nam. Menu và notebook mở SQLite chỉ đọc. Mã nguồn MIT.
+
+Đọc [từ điển và sơ đồ dữ liệu](docs/data_dictionary.md), chạy notebook tổng hợp rồi xem [20 bài tập](docs/exercises.md) và [lời giải](docs/solutions.md). Workflow phân tích trên GitHub giữ báo cáo và notebook đã chạy 14 ngày.
